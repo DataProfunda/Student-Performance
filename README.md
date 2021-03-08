@@ -44,19 +44,19 @@ Maybe male students are more likely to cheat on exams. Maybe male students study
 More data is necessary.
 
 # Student classifier
-Does features can tell us sex of the students?
+Does features can tell us sex of the students? <br>
 
-I've separated solution into two files:
-AlcoholConsumption.py - basic preprocessing, categorical featuresmapping, scaling, define MultiClassifier
-MultiClassifierModule.py - contains ExtraTreeClassifier, RandomForestClassifier, VotingClassifier and useful function to perform training.
+I've separated solution into two files: <br>
+AlcoholConsumption.py - basic preprocessing, categorical featuresmapping, scaling, define MultiClassifier <br>
+MultiClassifierModule.py - contains ExtraTreeClassifier, RandomForestClassifier, VotingClassifier and useful function to perform training. <br>
 
-For hyperparameters tuning I've used GridSearchCV. 
-n_repetition - number of repetition for finding best classifier.
+For hyperparameters tuning I've used GridSearchCV.  <br>
+n_repetition - number of repetition for finding best classifier. <br>
 
 # Results
-Max accuracy: 94%
-Accuracy calculated on test data.
-There are some clear differences between male and female students, but in terms of grades, they have more or less  same results.
+Max accuracy: 94% <br>
+Accuracy calculated on test data. <br>
+There are some clear differences between male and female students, but in terms of grades, they have more or less  same results. <br>
 
 
 
