@@ -1,22 +1,8 @@
-#Multi clf + grid search cv
-
-
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 import sklearn
-
-
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation,Dropout, InputLayer
-from tensorflow.keras.optimizers import Adam
-from tensorflow import keras
-
-
 
 
 from sklearn.model_selection import train_test_split
@@ -25,7 +11,6 @@ from sklearn.pipeline import make_pipeline
 
 import time
 
-from sklearn.decomposition import IncrementalPCA
 
 from sklearn.model_selection import RandomizedSearchCV
 
@@ -35,26 +20,13 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
 
-from sklearn.ensemble import VotingRegressor
-
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.svm import SVC
-from sklearn.ensemble import BaggingClassifier
+
+
 from sklearn.tree import DecisionTreeClassifier
 
-from sklearn.ensemble import GradientBoostingClassifier
 
-
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.ensemble import VotingRegressor
-import xgboost
-
-
-from sklearn.metrics import accuracy_score
-
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import  accuracy_score
 from sklearn.model_selection import train_test_split
 
 from sklearn.model_selection import GridSearchCV
@@ -64,7 +36,19 @@ import pickle
 
 class MultiClassifier():
     
-    def __init__(self,X_train,X_test, y_train, y_test, n_repetition=20, estimators = ('extra_clf', 'rnd_clf','voting_clf'), data_to_predict=None, col_id = None):
+    '''
+    This class performs ensemble learning on algorithms such as ExtraTreesClassifier,  RandomForestClassifier, VotingClassifier
+    X_train-(DataFrame)
+    X_test-(DataFrame)
+    y_train-(DataFrame)
+    y_test-(DataFrame)
+    
+    n_repetition- (int) times of repetition in training for finding better results
+    
+    estimators - default: ('extra_clf', 'rnd_clf','voting_clf') - specify classifier that we want to use
+    '''
+    
+    def __init__(self,X_train,X_test, y_train, y_test, n_repetition=20, estimators = ('extra_clf', 'rnd_clf','voting_clf')):
        
         self.X_train = X_train
         self.X_test = X_test
@@ -72,15 +56,14 @@ class MultiClassifier():
         self.y_test = y_test
         self.n_repetition = n_repetition
         self.estimators = estimators
-        self.data_to_predict = data_to_predict
-        self.col_id = col_id
+
         
-    
     
     def compile_fit(self):
         
-        self.clf_models = [] #List of classifiers, it is used for further fitting VotingClassifer
+        #Call funtions for performing compile and fit on classifiers
         
+        self.clf_models = [] #List of classifiers, it is used for further fitting VotingClassifer
 
         if 'extra_clf' in self.estimators:       
             self.extra_compile_fit()
@@ -97,7 +80,7 @@ class MultiClassifier():
                 
     def evaluate(self):  
         
-        
+        #Evaluate classifiers on test data
         if 'extra_clf' in self.estimators:
             y_pred = self.extra_clf.predict(self.X_test)
             print("Extra Trees Clf", accuracy_score(self.y_test, y_pred) )
@@ -106,14 +89,15 @@ class MultiClassifier():
             y_pred = self.rnd_clf.predict(self.X_test)
             print("Random Forest Clf", accuracy_score(self.y_test, y_pred))
 
-        
-        
+                
         if 'voting_clf' in self.estimators:
             y_pred = self.voting_clf.predict(self.X_test)
             print("Voting Clf", accuracy_score(self.y_test, y_pred))
 
         
     def save_model(self):
+        
+        #Save models
         
         if 'extra_clf' in self.estimators:
             
@@ -158,13 +142,13 @@ class MultiClassifier():
 
     
     def fit_with_test_data(self):
+        #Fit already trained classifiers with test data
         
         if 'extra_clf' in self.estimators:
             self.extra_clf = pickle.load(open('extra_clf.sav', 'rb'))
             
         if 'rnd_clf' in self.estimators:       
             self.rnd_clf = pickle.load(open('rnd_clf.sav', 'rb'))
-          
             
 
         if 'voting_clf' in self.estimators:
@@ -182,6 +166,8 @@ class MultiClassifier():
         print("dd")
 
     def load_models(self):
+        
+        #Loads models from a file
         
         if 'extra_clf' in self.estimators:
             self.extra_clf = pickle.load(open('extra_clf.sav', 'rb'))
@@ -203,6 +189,8 @@ class MultiClassifier():
             print("Voting Clf", accuracy_score(self.y_train, y_pred) / 1000000)
 
     def predict_save(self, data_to_predict, col_id, predictor='voting_clf'):
+        
+        #Perform prediction and save to a file
         
         if predictor == 'extra_clf':
             
@@ -249,6 +237,10 @@ class MultiClassifier():
             
             
     def extra_compile_fit(self):
+        
+        #Perform compile and fit on ExtraTreesClassifier
+        #GridSearchCV is used for hyperparameters tuning
+        
         param_grid = [ {"n_estimators" : [20,50, 70, 100,150,170,200,220],"max_depth":[ 2,3,10,15, 30, 40, 50 ] }]
             
         grid_search = GridSearchCV(ExtraTreesClassifier(), param_grid,  scoring="neg_mean_squared_error", verbose=2)
@@ -290,6 +282,9 @@ class MultiClassifier():
         
         
     def rnd_compile_fit(self):
+        
+        #Perform compile and fit on RandomForestClassifier
+        #GridSearchCV is used for hyperparameters tuning
         param_grid = [ {"n_estimators" : [20,30,50, 70, 100,150,170,200,220], "max_depth":[10,15,20,40,50,60 ]}]
             
         grid_search = GridSearchCV(RandomForestClassifier(), param_grid,  scoring="neg_mean_squared_error", verbose=2)
@@ -330,6 +325,9 @@ class MultiClassifier():
 
     
     def voting_compile_fit(self):
+        
+        #Perform compile and fit on VotingClassifier
+
         i = 0
         while(i < self.n_repetition):
                 
