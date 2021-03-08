@@ -19,7 +19,7 @@ Another interesting correlations are grades, failures, higher and studytime
 There is strong correlation between failures and grades. Students with more exams failure tend to have worse grades.
 Students that want to go higher in education are more likely to study more and have less failure.
 
-Mean G1 < G2 < G3. Students tend to have better last grades.
+Mean G1 < G2 < G3. Students tend to have better grades over time.
 
 # Other factors
 Female students tend:
