@@ -4,6 +4,11 @@ What the difference between female and male students? <br>
 How alcohol consumption influence grades? <br>
 Can we predict sex of the students? <br>
 
+# Results
+Max accuracy: 94% <br>
+Accuracy calculated on test data. <br>
+There are clear differences between male and female students, but in terms of grades, they show more or less same results. <br>
+
 # Analysis of students performance
 Two dataset concatenated together contain 1044 rows and 33 columns.
 
