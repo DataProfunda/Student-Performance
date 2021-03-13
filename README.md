@@ -56,7 +56,7 @@ n_repetition - number of repetition for finding best classifier. <br>
 # Results
 Max accuracy: 94% <br>
 Accuracy calculated on test data. <br>
-There are some clear differences between male and female students, but in terms of grades, they have more or less  same results. <br>
+There are clear differences between male and female students, but in terms of grades, they show more or less same results. <br>
 
 
 
